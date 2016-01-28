@@ -1,0 +1,58 @@
+{% extends "site_base.html" %}
+{% load bootstrap staticfiles%}
+{% load i18n %}
+
+{% block title %} {% if oper == 'new' %}{% trans "New Map" %}{% else %}{% trans "Edit Map" %}{% endif %} — {{ block.super }} {% endblock %}
+{% block extra_head %}
+    <style type="text/css">
+        #ct-legend {
+            display: none;
+        }
+    </style>
+{% endblock %}
+{% block body_outer %}
+<div class="page-header">
+  <h2>{% if oper == 'new' %}{% trans "Create Map" %}{% else %}{% trans "Edit Map" %}{% endif %}</h2>
+</div>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ map_form.errors }}
+    {{ map_form.title | bootstrap }}
+    {{ map_form.abstract | bootstrap }}
+    {{ map_form.keywords | bootstrap }}
+    {{ map_form.map | bootstrap }}
+    <div class="form-group">
+        <label class="control-label " for="id_layer">Layer</label>
+        <select id="id_layer" class=" form-control" name="layer" required="required"></select>
+    </div>
+    {{ map_form.hover_tpl | bootstrap }}
+    {{ map_form.enable_legend | bootstrap }}
+    <div id="ct-legend" class="form-group container">
+    <label class="radio">
+        <input type="radio" value="True" name="default_legend" checked="checked">Default Geoserver Legend
+    </label>
+    <label class="radio-inline">
+        <input type="radio" value="False" name="default_legend">{{ map_form.legend | bootstrap }}
+    </label>
+    </div>
+    {{ map_form.opacity | bootstrap }}
+    {{ map_form.enable_popup | bootstrap }}
+    {{ map_form.enable_hover | bootstrap }}
+    <br>
+    <input type="submit" class="btn btn-primary btn-lg" value="Save" />
+</form>
+{% endblock %}
+{% block extra_script %}
+    <script type="text/javascript">
+        var URL = "{% url 'cartoview_hover_map.map_layers' map_id="0" %}";
+        var SELECTED_LAYER = null;
+        {% if oper == 'edit' %}
+            SELECTED_LAYER = "{{ layer_name}}";
+            $("[name='default_legend']").val(["{{ map_form.default_legend.value }}"]);
+            {% if map_form.enable_legend.value %}
+                $("#ct-legend").toggle(this.checked);
+            {% endif %}
+        {% endif %}
+    </script>
+    <script src="{{ STATIC_URL }}cartoview_hover_map/js/script.js"></script>
+{% endblock %}

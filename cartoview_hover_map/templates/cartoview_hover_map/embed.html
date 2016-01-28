@@ -1,0 +1,48 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ map_layer.title }}</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{{ STATIC_URL }}cartoview_hover_map/leaflet-0.7.7/leaflet.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}cartoview_hover_map/css/style.css" />
+    <style type="text/css">
+        html, body, #map {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-indicator"></div>
+	<div id="map"></div>
+	<script src="{{ STATIC_URL }}admin/js/jquery.min.js?v={{ VERSION }}"></script>
+	<script src="{{ STATIC_URL }}cartoview_hover_map/leaflet-0.7.7/leaflet.js"></script>
+    <script src="http://maps.google.com/maps/api/js?v=3"></script>
+	<script src="{{ STATIC_URL }}cartoview_hover_map/js/Google.js"></script>
+    <script type="text/javascript">
+        $('body').addClass('app-loading');
+
+        var GEOSERVER_BASE_URL = "{{ GEOSERVER_BASE_URL }}";
+        var PROXY_URL = "{{ PROXY_URL }}";
+        var MEDIA_URL = "{{ MEDIA_URL }}";
+        var MAP_NAME = "{{ map_name }}";
+        var OPACITY = {{ map_layer.opacity }};
+        var HOVER_ENABLED = "{{ map_layer.enable_hover }}";
+        var POPUP_ENABLED = "{{ map_layer.enable_popup }}";
+        var HOVER_LAYER_NAME = "{{ map_layer.layer.name }}";
+        var LEGEND_ENABLED = "{{ map_layer.enable_legend }}";
+        var DEFAULT_LEGEND = "{{ map_layer.default_legend }}";
+        var LAYER_LEGEND = "{{ map_layer.legend }}";
+        var STYLES = "{{ styles }}";
+        var MAP_X = "{{ map_center.x }}";
+        var MAP_Y = "{{ map_center.y }}";
+        var MAP_ZOOM = "{{ map_layer.map.zoom }}";
+
+         var hover_template = '{{map_layer.hover_tpl|escapejs}}';
+    </script>
+	<script src="{{ STATIC_URL }}cartoview_hover_map/js/map.js"></script>
+</body>
+</html>
